@@ -1,5 +1,9 @@
 set -xe
 
+if [ -z "$STRIP" ]; then
+    STRIP=strip
+fi
+
 declare -a CMAKE_PLATFORM_FLAGS
 if [[ -n "${OSX_ARCH}" ]]; then
     CMAKE_PLATFORM_FLAGS+=(-DCMAKE_OSX_SYSROOT="${CONDA_BUILD_SYSROOT}" -DCLANG_C_COMPILER="$(which ${CC})" -DCLANG_CXX_COMPILER="$(which ${CXX})")
@@ -17,6 +21,7 @@ cd "${BUILD_DIR}"
 
 cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
     -Donnxruntime_DEV_MODE=OFF \
+    -Donnxruntime_BUILD_UNIT_TESTS=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -Donnxruntime_USE_PREINSTALLED_EIGEN=OFF \
     -Donnxruntime_BUILD_SHARED_LIB=ON \
@@ -25,3 +30,4 @@ cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
     "${SRC_DIR}/cmake"
 
 make install ${MAKEFLAGS}
+${STRIP} ${PREFIX}/lib/libonnxruntime.so.*
