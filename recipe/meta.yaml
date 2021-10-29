@@ -23,6 +23,7 @@ requirements:
         - make
         - {{ compiler('cxx') }}
     host:
+        - python                             # [build_platform != target_platform]
     run:
 
 about:
