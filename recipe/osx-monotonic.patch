@@ -1,0 +1,31 @@
+--- a/onnxruntime/core/platform/posix/env_time.cc	2021-11-01 16:30:29.000000000 +0100
++++ b/onnxruntime/core/platform/posix/env_time.cc	2021-11-02 09:54:58.000000000 +0100
+@@ -19,6 +19,10 @@
+ #include <cstring>
+ #include "core/platform/env_time.h"
+
++#ifdef __APPLE__
++#include <chrono>
++#endif
++
+ namespace onnxruntime {
+
+ namespace {
+@@ -44,7 +48,17 @@
+ #endif
+
+ bool GetMonotonicTimeCounter(TIME_SPEC* value) {
++#ifdef __APPLE__
++    using std::chrono::steady_clock;
++    using std::chrono::duration_cast;
++    auto now  = steady_clock::now().time_since_epoch();
++    auto sec = duration_cast<std::chrono::seconds>(now);
++    auto nsec = duration_cast<std::chrono::nanoseconds>(now) - duration_cast<std::chrono::nanoseconds>(sec);
++    value->tv_sec  = sec.count();
++    value->tv_nsec = nsec.count();
++#else
+   return clock_gettime(CLOCK_MONOTONIC, value) == 0;
++#endif
+ }
+
+ void SetTimeSpecToZero(TIME_SPEC* value) {

@@ -9,6 +9,8 @@ package:
 source:
     git_rev: v{{ version }}
     git_url: https://github.com/microsoft/onnxruntime.git
+    patches:
+        - osx-monotonic.patch                # [osx]
  
 build:
     number: {{ build_number }}
