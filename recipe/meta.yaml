@@ -77,6 +77,15 @@ test:
   requires:
     - pip
 
+outputs:
+  - name: onnxruntime{{ suffix }}
+  - name: onnxruntime-cpp{{ suffix }}
+    script: install-cpp.sh
+    requirements:
+      run:
+        - protobuf
+        - {{ pin_compatible('re2') }}
+
 about:
   home: https://github.com/microsoft/onnxruntime/
   summary: cross-platform, high performance ML inferencing and training accelerator
