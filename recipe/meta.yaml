@@ -61,24 +61,24 @@ requirements:
     - numpy
     - pybind11
     - safeint
+  run:
+    - python
+    - python-flatbuffers
+    - {{ pin_compatible('numpy') }}
+    - protobuf
+  run_constrained:
+    - onnxruntime <0a0  # [suffix == "-novec"]
+
+test:
+  imports:
+    - onnxruntime
+  commands:
+    - pip check
+  requires:
+    - pip
 
 outputs:
   - name: {{ name|lower }}{{ suffix }}
-    requirements:
-      run:
-        - python
-        - python-flatbuffers
-        - {{ pin_compatible('numpy') }}
-        - protobuf
-      run_constrained:
-        - onnxruntime <0a0  # [suffix == "-novec"]
-    test:
-      imports:
-        - onnxruntime
-      commands:
-        - pip check
-      requires:
-        - pip
   - name: {{ name|lower }}-cpp{{ suffix }}
     files:
       - include/onnxruntime/
