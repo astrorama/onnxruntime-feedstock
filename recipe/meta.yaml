@@ -61,30 +61,41 @@ requirements:
     - numpy
     - pybind11
     - safeint
-  run:
-    - python
-    - python-flatbuffers
-    - {{ pin_compatible('numpy') }}
-    - protobuf
-  run_constrained:
-    - onnxruntime <0a0  # [suffix == "-novec"]
-
-test:
-  imports:
-    - onnxruntime
-  commands:
-    - pip check
-  requires:
-    - pip
 
 outputs:
-  - name: onnxruntime{{ suffix }}
-  - name: onnxruntime-cpp{{ suffix }}
-    script: install-cpp.sh
+  - name: {{ name|lower }}{{ suffix }}
+    requirements:
+      run:
+        - python
+        - python-flatbuffers
+        - {{ pin_compatible('numpy') }}
+        - protobuf
+      run_constrained:
+        - onnxruntime <0a0  # [suffix == "-novec"]
+    test:
+      imports:
+        - onnxruntime
+      commands:
+        - pip check
+      requires:
+        - pip
+  - name: {{ name|lower }}-cpp{{ suffix }}
+    files:
+      - include/onnxruntime/
+      - build-ci/Release/libonnxruntime.*dylib  # [osx]
+      - build-ci/Release/libonnxruntime.so*     # [linux]
     requirements:
       run:
         - protobuf
         - {{ pin_compatible('re2') }}
+    test:
+      requires:
+        - {{ compiler('cxx') }}
+      files:
+        - test.cpp
+      commands:
+        - {{ environ.get('CXX', 'g++') }} -lonnxruntime test.cpp
+        - ./a.out
 
 about:
   home: https://github.com/microsoft/onnxruntime/
