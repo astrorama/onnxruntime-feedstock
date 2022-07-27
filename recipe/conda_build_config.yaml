@@ -5,3 +5,6 @@ MACOSX_SDK_VERSION:        # [osx and x86_64]
 suffix:
   - ""
   - "-novec"
+
+channel_targets:
+  - astrorama main
