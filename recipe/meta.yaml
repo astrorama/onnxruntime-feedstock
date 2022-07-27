@@ -80,10 +80,7 @@ test:
 outputs:
   - name: {{ name|lower }}{{ suffix }}
   - name: {{ name|lower }}-cpp{{ suffix }}
-    files:
-      - include/onnxruntime/
-      - build-ci/Release/libonnxruntime.*dylib  # [osx]
-      - build-ci/Release/libonnxruntime.so*     # [linux]
+    script: install-cpp.sh
     requirements:
       run:
         - protobuf
@@ -94,7 +91,7 @@ outputs:
       files:
         - test.cpp
       commands:
-        - {{ environ.get('CPP', 'g++') }} -lonnxruntime test.cpp
+        - $CXX -I$PREFIX/include/ -lonnxruntime test.cpp
         - ./a.out
 
 about:
