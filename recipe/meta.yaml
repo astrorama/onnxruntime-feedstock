@@ -79,7 +79,7 @@ test:
 
 outputs:
   - name: {{ name|lower }}{{ suffix }}
-  - name: {{ name|lower }}-cpp{{ suffix }}
+  - name: {{ name|lower }}{{ suffix }}-cpp
     script: install-cpp.sh
     requirements:
       run:

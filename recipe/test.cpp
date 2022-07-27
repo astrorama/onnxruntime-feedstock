@@ -10,7 +10,7 @@ int main() {
     for (const auto& provider : providers) {
         std::cout << provider << '\n';
     }
-    
+
     return EXIT_SUCCESS;
 }
 
