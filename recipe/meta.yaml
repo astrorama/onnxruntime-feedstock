@@ -94,7 +94,7 @@ outputs:
       files:
         - test.cpp
       commands:
-        - {{ environ.get('CXX', 'g++') }} -lonnxruntime test.cpp
+        - {{ environ.get('CPP', 'g++') }} -lonnxruntime test.cpp
         - ./a.out
 
 about:
